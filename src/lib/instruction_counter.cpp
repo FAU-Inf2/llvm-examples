@@ -1,4 +1,4 @@
-#include "instruction_counter.h"
+#include "lib/instruction_counter.h"
 
 char InstructionCounter::ID = 0;
 

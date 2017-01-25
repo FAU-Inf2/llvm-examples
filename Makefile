@@ -42,7 +42,8 @@ TARGET := $(DIR_BIN)/instruction_counter.so
 
 # Get all source and object files
 SRC_FILES := $(shell find $(DIR_SRC) -name "*.cpp")
-OBJ_FILES := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(notdir $(SRC_FILES)))
+# OBJ_FILES := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(notdir $(SRC_FILES)))
+OBJ_FILES := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(SRC_FILES:$(DIR_SRC)/%=%))
 
 
 #----------------------------------------------------------------------------
@@ -70,16 +71,17 @@ $(TARGET): $(OBJ_FILES)
 	$(VERB)$(CXX) -shared $(LDFLAGS) $^ $(LLVM_LDFLAGS) -o $@
 
 
--include $(patsubst %.cpp, $(DIR_DEP)/%.md, $(notdir $(SRC_FILES)))
+# -include $(patsubst %.cpp, $(DIR_DEP)/%.md, $(notdir $(SRC_FILES)))
+-include $(patsubst %.cpp, $(DIR_DEP)/%.md, $(SRC_FILES:$(DIR_SRC)/%=%))
 
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.cpp
-	$(VERB)mkdir -p $(DIR_OBJ)
-	$(VERB)mkdir -p $(DIR_DEP)
+	$(VERB)mkdir -p $(dir $@)
+	$(VERB)mkdir -p $(dir $(@:$(DIR_OBJ)/%=$(DIR_DEP)/%))
 	@echo -e 'DEP\t$<'
-	$(VERB)$(CXX) $(LLVM_CXXFLAGS) $(CXXFLAGS) $(LLVM_INCLUDE) -MM -MP -MT $(DIR_OBJ)/$(*F).o -MT $(DIR_DEP)/$(*F).md $< > $(DIR_DEP)/$(*F).md
+	$(VERB)$(CXX) -I $(DIR_SRC) $(LLVM_CXXFLAGS) $(CXXFLAGS) $(LLVM_INCLUDE) -MM -MP -MT $@ -MT $(@:$(DIR_OBJ)/%.o=$(DIR_DEP)/%.md) $< > $(@:$(DIR_OBJ)/%.o=$(DIR_DEP)/%.md)
 	@echo -e 'CMPL\t$<'
-	$(VERB)$(CXX) $(LLVM_CXXFLAGS) $(CXXFLAGS) $(LLVM_INCLUDE) -c $< -o $@
+	$(VERB)$(CXX) -I $(DIR_SRC) $(LLVM_CXXFLAGS) $(CXXFLAGS) $(LLVM_INCLUDE) -c $< -o $@
 
 
 .PHONY: clean
