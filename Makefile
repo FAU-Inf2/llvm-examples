@@ -26,7 +26,8 @@ LLVM_CONFIG := llvm-config-$(LLVM_VERSION)
 
 # Compiler and linker flags needed to link against the LLVM libraries
 LLVM_CXXFLAGS := `$(LLVM_CONFIG) --cxxflags`
-LLVM_LDFLAGS := `$(LLVM_CONFIG) --ldflags --system-libs`
+LLVM_LDFLAGS_LIB := `$(LLVM_CONFIG) --ldflags --system-libs`
+LLVM_LDFLAGS_APP := `$(LLVM_CONFIG) --ldflags --libs --system-libs`
 
 # Additional include path to find LLVM headers
 LLVM_INCLUDE := -I`$(LLVM_CONFIG) --includedir`
@@ -35,14 +36,18 @@ LLVM_INCLUDE := -I`$(LLVM_CONFIG) --includedir`
 DIR_SRC := src
 DIR_OBJ := obj
 DIR_DEP := dep
+DIR_LIB := lib
 
 # Target file
 DIR_BIN := bin
-TARGET := $(DIR_BIN)/instruction_counter.so
+TARGET_LIB := $(DIR_BIN)/instruction_counter.so
+TARGET_APP := $(DIR_BIN)/app
 
 # Get all source and object files
 SRC_FILES := $(shell find $(DIR_SRC) -name "*.cpp")
+SRC_FILES_LIB := $(shell find $(DIR_SRC)/$(DIR_LIB) -name "*.cpp")
 OBJ_FILES := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(SRC_FILES:$(DIR_SRC)/%=%))
+OBJ_FILES_LIB := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(SRC_FILES_LIB:$(DIR_SRC)/%=%))
 
 
 #----------------------------------------------------------------------------
@@ -61,13 +66,18 @@ $(info )
 
 
 .PHONY: all
-all: $(TARGET)
+all: $(TARGET_LIB) $(TARGET_APP)
 
 
-$(TARGET): $(OBJ_FILES)
+$(TARGET_LIB): $(OBJ_FILES_LIB)
 	$(VERB)mkdir -p $(DIR_BIN)
 	@echo -e 'LD\t$@'
-	$(VERB)$(CXX) -shared $(LDFLAGS) $^ $(LLVM_LDFLAGS) -o $@
+	$(VERB)$(CXX) -shared $(LDFLAGS) $^ $(LLVM_LDFLAGS_LIB) -o $@
+
+$(TARGET_APP): $(OBJ_FILES)
+	$(VERB)mkdir -p $(DIR_BIN)
+	@echo -e 'LD\t$@'
+	$(VERB)$(CXX) $(LDFLAGS) $^ $(LLVM_LDFLAGS_APP) -o $@
 
 
 -include $(patsubst %.cpp, $(DIR_DEP)/%.md, $(SRC_FILES:$(DIR_SRC)/%=%))
