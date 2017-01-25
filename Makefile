@@ -42,7 +42,6 @@ TARGET := $(DIR_BIN)/instruction_counter.so
 
 # Get all source and object files
 SRC_FILES := $(shell find $(DIR_SRC) -name "*.cpp")
-# OBJ_FILES := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(notdir $(SRC_FILES)))
 OBJ_FILES := $(patsubst %.cpp, $(DIR_OBJ)/%.o, $(SRC_FILES:$(DIR_SRC)/%=%))
 
 
@@ -71,7 +70,6 @@ $(TARGET): $(OBJ_FILES)
 	$(VERB)$(CXX) -shared $(LDFLAGS) $^ $(LLVM_LDFLAGS) -o $@
 
 
-# -include $(patsubst %.cpp, $(DIR_DEP)/%.md, $(notdir $(SRC_FILES)))
 -include $(patsubst %.cpp, $(DIR_DEP)/%.md, $(SRC_FILES:$(DIR_SRC)/%=%))
 
 
