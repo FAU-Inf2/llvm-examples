@@ -40,7 +40,7 @@ DIR_LIB := lib
 
 # Target file
 DIR_BIN := bin
-TARGET_LIB := $(DIR_BIN)/instruction_counter.so
+TARGET_LIB := $(DIR_BIN)/passes.so
 TARGET_APP := $(DIR_BIN)/app
 
 # Get all source and object files
