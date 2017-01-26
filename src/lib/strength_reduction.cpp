@@ -14,6 +14,7 @@ static int isConst2(const BinaryOperator *binaryOperator, const int operand) {
 }
 
 static int operandToShift(const BinaryOperator *binaryOperator) {
+  assert (binaryOperator->getOpcode() == Instruction::Mul);
   if (isConst2(binaryOperator, 0)) return 1;
   if (isConst2(binaryOperator, 1)) return 0;
   return -1;
