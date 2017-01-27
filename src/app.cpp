@@ -1,10 +1,11 @@
+#include "llvm/IR/IRPrintingPasses.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IRReader/IRReader.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/SourceMgr.h"
 
-#include "lib/instruction_counter.h"
+#include "lib/strength_reduction.h"
 
 using namespace llvm;
 
@@ -25,7 +26,8 @@ int main(int argc, char **argv) {
   }
 
   legacy::PassManager passManager;
-  passManager.add(new InstructionCounter());
+  passManager.add(new StrengthReduction());
+  passManager.add(createPrintModulePass(outs(), "", true));
   passManager.run(*module);
 
   return 0;
