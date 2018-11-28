@@ -10,14 +10,14 @@ else
 endif
 
 # Run 'make LLVM_VERSION=<V>' to set LLVM version to <V>
-LLVM_VERSION := "3.8"
+LLVM_VERSION := "7"
 
 # Set C++ compiler and compiler flags used to compile the project
-CXX := g++
+CXX := clang++-$(LLVM_VERSION)
 CXXFLAGS :=
 
 # Set linker and linker flags used to link the project's object files
-LD := g++
+LD := $(CXX)
 LDFLAGS :=
 
 # Path to the llvm-config tool
