@@ -10,7 +10,7 @@ To build the dynamic library as well as the stand-alone application simply type
 make
 ```
 
-Without further changes to the Makefile it is required that LLVM is installed and can be found in the search path. This project was built and tested against LLVM version 3.8.
+Without further changes to the Makefile it is required that LLVM is installed and can be found in the search path. This project was built and tested against LLVM version 7.0.
 
 ## Running the example pass
 
