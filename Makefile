@@ -14,7 +14,7 @@ LLVM_VERSION := "7"
 
 # Set C++ compiler and compiler flags used to compile the project
 CXX := clang++-$(LLVM_VERSION)
-CXXFLAGS :=
+CXXFLAGS := -fPIC
 
 # Set linker and linker flags used to link the project's object files
 LD := $(CXX)
