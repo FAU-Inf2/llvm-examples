@@ -50,6 +50,10 @@ bool StrengthReduction::runOnFunction(Function &function) {
   return modified;
 }
 
+void StrengthReduction::getAnalysisUsage(AnalysisUsage &AU) const {
+  AU.setPreservesCFG();
+}
+
 static bool MODIFIES_CFG = false;
 static bool ANALYSIS_ONLY = false;
 

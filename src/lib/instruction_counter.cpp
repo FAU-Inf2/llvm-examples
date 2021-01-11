@@ -20,6 +20,10 @@ void InstructionCounter::print(llvm::raw_ostream &stream, const Module *module) 
   }
 }
 
+void InstructionCounter::getAnalysisUsage(AnalysisUsage &AU) const {
+  AU.setPreservesAll();
+}
+
 static bool MODIFIES_CFG = false;
 static bool ANALYSIS_ONLY = true;
 

@@ -2,6 +2,7 @@
 #define __INCLUDE_INSTRUCTION_COUNTER
 
 #include "llvm/Pass.h"
+#include "llvm/PassAnalysisSupport.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
@@ -20,6 +21,7 @@ struct InstructionCounter : public FunctionPass {
 
   bool runOnFunction(Function &function) override;
   void print(llvm::raw_ostream &stream, const Module *module) const override;
+  void getAnalysisUsage(AnalysisUsage &Info) const override;
 
 };
 

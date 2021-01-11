@@ -2,6 +2,7 @@
 #define __INCLUDE_STRENGTH_REDUCTION
 
 #include "llvm/Pass.h"
+#include "llvm/PassAnalysisSupport.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
@@ -18,6 +19,7 @@ struct StrengthReduction : public FunctionPass {
   StrengthReduction() : FunctionPass(ID) {}
 
   bool runOnFunction(Function &function) override;
+  void getAnalysisUsage(AnalysisUsage &Info) const override;
 
 };
 
