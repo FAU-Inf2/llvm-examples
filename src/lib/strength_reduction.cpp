@@ -20,27 +20,29 @@ static int operandToShift(const BinaryOperator *binaryOperator) {
   return -1;
 }
 
-bool StrengthReduction::runOnBasicBlock(BasicBlock &basicBlock) {
+bool StrengthReduction::runOnFunction(Function &function) {
   bool modified = false;
 
-  for (auto itInstruction = basicBlock.begin(); itInstruction != basicBlock.end();) {
-    Instruction *instruction = &*itInstruction++;
-    BinaryOperator *binaryOperator;
+  for (auto itBasicBlock = function.begin(); itBasicBlock != function.end(); ++itBasicBlock) {
+    for (auto itInstruction = itBasicBlock->begin(); itInstruction != itBasicBlock->end(); ++itInstruction) {
+      Instruction *instruction = &*itInstruction++;
+      BinaryOperator *binaryOperator;
 
-    if ((binaryOperator = dyn_cast<BinaryOperator>(instruction)) &&
-        (binaryOperator->getOpcode() == Instruction::Mul)) {
+      if ((binaryOperator = dyn_cast<BinaryOperator>(instruction)) &&
+          (binaryOperator->getOpcode() == Instruction::Mul)) {
 
-      int _operandToShift = operandToShift(binaryOperator);
-      if (_operandToShift != -1) {
-        BinaryOperator *shl = BinaryOperator::CreateShl(
-          binaryOperator->getOperand(_operandToShift),
-          ConstantInt::getSigned(binaryOperator->getType(), 1),
-          "", binaryOperator);
-        shl->takeName(binaryOperator);
-        binaryOperator->replaceAllUsesWith(shl);
-        binaryOperator->eraseFromParent();
+        int _operandToShift = operandToShift(binaryOperator);
+        if (_operandToShift != -1) {
+          BinaryOperator *shl = BinaryOperator::CreateShl(
+            binaryOperator->getOperand(_operandToShift),
+            ConstantInt::getSigned(binaryOperator->getType(), 1),
+            "", binaryOperator);
+          shl->takeName(binaryOperator);
+          binaryOperator->replaceAllUsesWith(shl);
+          binaryOperator->eraseFromParent();
 
-        modified = true;
+          modified = true;
+        }
       }
     }
   }

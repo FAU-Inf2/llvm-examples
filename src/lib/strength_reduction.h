@@ -2,7 +2,7 @@
 #define __INCLUDE_STRENGTH_REDUCTION
 
 #include "llvm/Pass.h"
-#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Function.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
 
@@ -11,13 +11,13 @@
 
 using namespace llvm;
 
-struct StrengthReduction : public BasicBlockPass {
+struct StrengthReduction : public FunctionPass {
 
   static char ID;
 
-  StrengthReduction() : BasicBlockPass(ID) {}
+  StrengthReduction() : FunctionPass(ID) {}
 
-  bool runOnBasicBlock(BasicBlock &basicBlock) override;
+  bool runOnFunction(Function &function) override;
 
 };
 
