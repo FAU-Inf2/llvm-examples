@@ -15,17 +15,24 @@ static int isConst2(const BinaryOperator *binaryOperator, const int operand) {
 
 static int operandToShift(const BinaryOperator *binaryOperator) {
   assert (binaryOperator->getOpcode() == Instruction::Mul);
-  if (isConst2(binaryOperator, 0)) return 1;
-  if (isConst2(binaryOperator, 1)) return 0;
+
+  if (isConst2(binaryOperator, 0)) {
+    return 1;
+  }
+
+  if (isConst2(binaryOperator, 1)) {
+    return 0;
+  }
+
   return -1;
 }
 
 bool StrengthReduction::runOnFunction(Function &function) {
   bool modified = false;
 
-  for (auto itBasicBlock = function.begin(); itBasicBlock != function.end(); ++itBasicBlock) {
-    for (auto itInstruction = itBasicBlock->begin(); itInstruction != itBasicBlock->end(); ++itInstruction) {
-      Instruction *instruction = &*itInstruction++;
+  for (BasicBlock &basicBlock : function) {
+    for (auto itInsn = basicBlock.begin(); itInsn != basicBlock.end(); ++itInsn) {
+      Instruction *instruction = &*itInsn++;
       BinaryOperator *binaryOperator;
 
       if ((binaryOperator = dyn_cast<BinaryOperator>(instruction)) &&
@@ -54,9 +61,5 @@ void StrengthReduction::getAnalysisUsage(AnalysisUsage &AU) const {
   AU.setPreservesCFG();
 }
 
-static bool MODIFIES_CFG = false;
-static bool ANALYSIS_ONLY = false;
-
 static RegisterPass<StrengthReduction>
-  strengthReduction("strength-reduction", "performs a very simple strength reduction",
-                    MODIFIES_CFG, ANALYSIS_ONLY);
+  strengthReduction("strength-reduction", "performs a very simple strength reduction");
