@@ -31,7 +31,7 @@ bool StrengthReduction::runOnFunction(Function &function) {
   bool modified = false;
 
   for (BasicBlock &basicBlock : function) {
-    for (auto itInsn = basicBlock.begin(); itInsn != basicBlock.end(); ++itInsn) {
+    for (auto itInsn = basicBlock.begin(); itInsn != basicBlock.end(); ) {
       Instruction *instruction = &*itInsn++;
       BinaryOperator *binaryOperator;
 
