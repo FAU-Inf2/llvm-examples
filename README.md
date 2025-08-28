@@ -7,23 +7,23 @@ This repository contains a very simple example project that shows how to write a
 To build the dynamic library as well as the stand-alone application simply type 
 
 ```
-make
+cmake -B build -S src; cd build; make
 ```
 
-Without further changes to the Makefile it is required that LLVM is installed and can be found in the search path. This project was built and tested against LLVM version 7.0.
+Without further changes it is required that LLVM is installed and can be found in the search path. This project was built and tested against LLVM version 18.1.8.
 
 ## Running the example pass
 
 The dynamic library can be used with the LLVM `opt` tool, e.g.
 
 ```
-opt -S -load=./bin/passes.o -strength-reduction <INPUT PROGRAM>
+opt --load-pass-plugin=build/libStrengthReduction.so -S -passes="strength-reduction" -S <INPUT PROGRAM>
 ```
 
 The stand-alone application can be run as follows:
 
 ```
-./bin/app <INPUT PROGRAM>
+./build/Standalone <INPUT PROGRAM>
 ```
 
 ## License
