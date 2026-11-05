@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.6)
 project(strength-reduction-pass)
 # we need LLVM_HOME in order to automatically set LLVM_DIR
 if(DEFINED ENV{LLVM_HOME})

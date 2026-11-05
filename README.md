@@ -10,7 +10,7 @@ To build the dynamic library as well as the stand-alone application simply type
 cmake -B build -S src; cd build; make
 ```
 
-Without further changes it is required that LLVM is installed and can be found in the search path. This project was built and tested against LLVM version 18.1.8.
+Without further changes it is required that LLVM is installed and can be found in the search path. This project was built and tested against LLVM version 22.1.8.
 
 ## Running the example pass
 
