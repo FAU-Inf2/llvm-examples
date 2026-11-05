@@ -1,4 +1,5 @@
 #include "StrengthReduction.hpp"
+#include <llvm/IR/InstrTypes.h>
 #include <llvm/Support/Casting.h>
 using namespace llvm;
 static bool isConst2(const BinaryOperator &op, int operandNum) {
@@ -18,7 +19,7 @@ PreservedAnalyses StrengthReductionPass::run(Function &F,
       Instruction &instr = *(it++);
       if (BinaryOperator *binOp = dyn_cast<BinaryOperator>(&instr)) {
         int toShift = operandToShift(*binOp);
-        if (toShift != -1) {
+        if (binOp->getOpcode() == BinaryOperator::Mul && toShift != -1) {
           BinaryOperator *shift = BinaryOperator::CreateShl(
               binOp->getOperand(toShift), ConstantInt::get(binOp->getType(), 1),
               "", binOp);
@@ -44,7 +45,7 @@ llvm::PassPluginLibraryInfo getCustomPluginInfo() {
                 });
             // this one is needed for clang
             PB.registerPipelineEarlySimplificationEPCallback(
-                [&](ModulePassManager &MPM, auto) {
+                [&](ModulePassManager &MPM, auto, auto) {
                   MPM.addPass(createModuleToFunctionPassAdaptor(
                       StrengthReductionPass()));
                   return true;

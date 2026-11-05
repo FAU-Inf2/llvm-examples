@@ -1,15 +1,10 @@
 cmake_minimum_required(VERSION 3.4)
 project(strength-reduction-pass)
-# We need LLVM_HOME in order to automatically set LLVM_DIR.
-# If you installed llvm normally this should be /usr/ as the
-# path /usr/lib/cmake/llvm/ exists (i.e., `export LLVM_HOME=/usr`)
-if((NOT DEFINED ENV{LLVM_HOME}) AND (NOT DEFINED ENV{LLVM_DIR}))
-		message(FATAL_ERROR "$LLVM_HOME is not defined (i.e., `export LLVM_HOME=/usr` or `export LLVM_DIR=/usr/lib/cmake/llvm`)")
-else ()
-	if (NOT DEFINED ENV{LLVM_DIR})
-		set(ENV{LLVM_DIR} $ENV{LLVM_HOME}/lib/cmake/llvm)
-	endif()
+# we need LLVM_HOME in order to automatically set LLVM_DIR
+if(DEFINED ENV{LLVM_HOME})
+    set(ENV{LLVM_DIR} $ENV{LLVM_HOME}/lib/cmake/llvm)
 endif()
+
 find_package(LLVM REQUIRED CONFIG)
 add_definitions(${LLVM_DEFINITIONS})
 include_directories(${LLVM_INCLUDE_DIRS})
